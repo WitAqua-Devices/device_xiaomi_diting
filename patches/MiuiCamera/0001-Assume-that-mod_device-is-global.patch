@@ -1,0 +1,24 @@
+Subject: [PATCH] Assume that mod_device is global
+
+MiuiCamera reads ro.product.mod_device and only takes the global path when
+the value contains "_global". Stock spells it diting_global, ditingp_jp and
+so on; this tree sets it to diting / ditingp, so the check fails and the app
+goes looking for the HyperOS Security Center to put up its own permission
+dialog. Nothing answers, and the camera never gets past it.
+
+The flag it sets (Lmb/c;->E:Z) is only ever read as "is this a global build",
+so force it rather than trying to spell mod_device in a way MIUI likes -
+ro.product.mod_device is imported per SKU from /odm and is not ours to shape.
+
+diff --git a/smali_classes3/mb/c.smali b/smali_classes3/mb/c.smali
+--- a/smali_classes3/mb/c.smali
++++ b/smali_classes3/mb/c.smali
+@@ -566,7 +566,7 @@
+ 
+     invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+ 
+-    move-result v0
++    const/4 v0, 0x1
+ 
+     sput-boolean v0, Lmb/c;->E:Z
+ 

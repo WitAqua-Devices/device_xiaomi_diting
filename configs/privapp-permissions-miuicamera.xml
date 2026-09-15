@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The WitAqua Project
+
+     SPDX-License-Identifier: Apache-2.0
+-->
+<!--
+     The allowlist stock ships for MiuiCamera, minus the mediatek permission it
+     carries for the shared build - diting is qualcomm and the permission does
+     not exist here. The rest of the 63 permissions the apk asks for are either
+     runtime or signature level, and the apk is signed with the platform key,
+     so only the privileged ones need naming.
+-->
+<permissions>
+    <privapp-permissions package="com.android.camera">
+        <permission name="android.permission.INTERACT_ACROSS_USERS" />
+        <permission name="android.permission.LOG_COMPAT_CHANGE" />
+        <permission name="android.permission.READ_COMPAT_CHANGE_CONFIG" />
+        <permission name="android.permission.START_ACTIVITIES_FROM_BACKGROUND" />
+        <permission name="android.permission.SYSTEM_CAMERA" />
+        <permission name="android.permission.TURN_SCREEN_ON" />
+        <permission name="android.permission.WRITE_MEDIA_STORAGE" />
+        <permission name="android.permission.WRITE_SECURE_SETTINGS" />
+    </privapp-permissions>
+</permissions>

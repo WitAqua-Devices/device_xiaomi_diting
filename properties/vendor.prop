@@ -5,5 +5,13 @@ persist.vendor.sys.fp.expolevel=0x88
 persist.vendor.sys.fp.fod.location.X_Y=496,2330
 persist.vendor.sys.fp.fod.size.width_height=228,228
 
+# Camera
+#
+# The qcom camera HAL only hands its vendor tags to packages named here, and
+# MiuiCamera is nothing without them. Kept on vendor rather than system because
+# persist.vendor.camera. is vendor_camera_prop - init proper cannot set it, only
+# vendor_init can, and vendor_init only reads /vendor/build.prop.
+persist.vendor.camera.privapp.list=com.android.camera,org.lineageos.aperture
+
 # System properties
 ro.product.property_source_order=odm,vendor,product,system_ext,system

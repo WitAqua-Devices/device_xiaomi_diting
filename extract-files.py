@@ -10,6 +10,7 @@ from extract_utils.fixups_blob import (
 )
 from extract_utils.fixups_lib import (
     lib_fixups,
+    lib_fixups_user_type,
 )
 from extract_utils.main import (
     ExtractUtils,
@@ -17,6 +18,7 @@ from extract_utils.main import (
 )
 
 namespace_imports = [
+    'device/xiaomi/diting',
     'device/xiaomi/sm8450-common',
     'hardware/qcom-caf/sm8450',
     'hardware/xiaomi',
@@ -24,7 +26,35 @@ namespace_imports = [
     'vendor/xiaomi/sm8450-common',
 ]
 
+
+def lib_fixup_system_suffix(lib: str, partition: str, *args, **kwargs):
+    return f'{lib}_{partition}' if partition == 'system' else None
+
+
+lib_fixups: lib_fixups_user_type = {
+    **lib_fixups,
+    # Moved to /system, where a plain vendor.xiaomi.hardware.campostproc@1.0
+    # would collide with the vendor copy this tree already ships.
+    'vendor.xiaomi.hardware.campostproc@1.0': lib_fixup_system_suffix,
+}
+
 blob_fixups: blob_fixups_user_type = {
+    # Both jni libraries want BnProducerListener::onBufferDetached(int), which
+    # AOSP no longer has. The offset in getANativeWindow() is an android::Surface
+    # vtable slot that moved with the platform, not with the device.
+    'system/lib64/libcamera_algoup_jni.xiaomi.so': blob_fixup()
+        .add_needed('libgui_shim_miuicamera.so')
+        .sig_replace('08 AD 40 F9', '08 A9 40 F9'),
+    'system/lib64/libcamera_mianode_jni.xiaomi.so': blob_fixup()
+        .add_needed('libgui_shim_miuicamera.so'),
+    # libhidltransport is gone
+    'system/lib64/libmicampostproc_client.so': blob_fixup()
+        .remove_needed('libhidltransport.so'),
+    # MiuiCamera only takes its global path when ro.product.mod_device contains
+    # "_global", which this tree never spells that way. See the patch.
+    'product/priv-app/MiuiCamera/MiuiCamera.apk': blob_fixup().apktool_patch(
+        'patches/MiuiCamera'
+    ),
     (
         'vendor/etc/camera/diting_enhance_motiontuning.xml',
         'vendor/etc/camera/diting_motiontuning.xml',

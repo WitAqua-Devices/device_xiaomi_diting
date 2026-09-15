@@ -1123,3 +1123,29 @@ vendor/firmware/vpu20_4v.b18
 vendor/firmware/vpu20_4v.b19
 vendor/firmware/vpu20_4v.mbn
 vendor/firmware/vpu20_4v.mdt
+
+# MIUI Camera
+#
+# From the global OS3.0.6.0.VLFMIXM dump rather than either japanese one: the
+# japanese builds never got HyperOS 3 and carry a camera two branches behind
+# (5.1.x / 4.5.x), while this tree's blobs are OS3.0.5.0.VLFMIXM. The camera
+# talks to that HAL through xiaomi vendor tags, so it wants to be from the same
+# firmware family.
+#
+# The apk is rebuilt by extract-files.py (patches/MiuiCamera), which is why it
+# is not PRESIGNED: it no longer carries Xiaomi's signature, so extract-utils
+# has the build sign it with the platform key. Nothing checks it - the camera
+# has no signature check of its own and shares no uid.
+#
+# The two jni libraries are what MiuiCamera loads by name
+# (System.loadLibrary("camera_algoup_jni.xiaomi") and the mianode one), so they
+# have to be reachable from an app namespace: they go to /system and are named
+# in configs/public.libraries-xiaomi.txt. libmicampostproc_client and the
+# campostproc interface come along because the first two link against them.
+#
+#   ./extract-files.py -n -s 'MIUI Camera' <FW/GL>
+product/priv-app/MiuiCamera/MiuiCamera.apk
+system_ext/lib64/libcamera_algoup_jni.xiaomi.so:system/lib64/libcamera_algoup_jni.xiaomi.so
+system_ext/lib64/libcamera_mianode_jni.xiaomi.so:system/lib64/libcamera_mianode_jni.xiaomi.so
+system_ext/lib64/libmicampostproc_client.so:system/lib64/libmicampostproc_client.so
+system_ext/lib64/vendor.xiaomi.hardware.campostproc@1.0.so:system/lib64/vendor.xiaomi.hardware.campostproc@1.0.so;MODULE_SUFFIX=_system

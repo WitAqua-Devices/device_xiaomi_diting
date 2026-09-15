@@ -17,6 +17,26 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/resourcemanager_waipio_mtp.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_cape/resourcemanager_waipio_mtp.xml \
     $(LOCAL_PATH)/audio/usecaseKvManager.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usecaseKvManager.xml
 
+# MIUI Camera
+#
+# The apk and the xiaomi jni libraries come from vendor/xiaomi/diting; the apk
+# is patched by extract-files.py (patches/MiuiCamera). What has to live here:
+#
+#  - the privileged permission allowlist, or PackageManager refuses the app the
+#    8 privileged permissions it declares, which is fatal on an enforcing build
+#  - the hidden api allowlist; MiuiCamera is built against MIUI's framework and
+#    uses plenty of @hide, which Android would otherwise block
+#  - public.libraries, so the two jni libraries can be loaded by name from the
+#    app's classloader namespace
+#  - the libgui shim the jni libraries are linked against by extract-files.py
+PRODUCT_PACKAGES += \
+    libgui_shim_miuicamera
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/privapp-permissions-miuicamera.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/privapp-permissions-miuicamera.xml \
+    $(LOCAL_PATH)/configs/miuicamera-hiddenapi-package-allowlist.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/miuicamera-hiddenapi-package-allowlist.xml \
+    $(LOCAL_PATH)/configs/public.libraries-xiaomi.txt:$(TARGET_COPY_OUT_SYSTEM)/etc/public.libraries-xiaomi.txt
+
 # Overlay
 PRODUCT_PACKAGES += \
     ApertureResDiting \

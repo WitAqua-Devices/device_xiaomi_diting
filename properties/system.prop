@@ -1,2 +1,14 @@
+# MIUI Camera
+#
+# MiuiCamera reads the MIUI version out of these and refuses to come up when
+# they are missing. The value is the one the firmware these blobs come from
+# reports; nothing else in this ROM looks at them.
+ro.miui.notch=1
+ro.miui.ui.version.code=816
+ro.miui.ui.version.name=V816
+
+# Let Lens open MiuiCamera rather than looking for a camera that is not here
+ro.com.google.lens.oem_camera_package=com.android.camera
+
 # Xiaomi
 ro.product.mod_device=diting

@@ -1,0 +1,2 @@
+# MiuiCamera hands buffers back to the camera HAL over binder.
+binder_call(hal_camera_default, platform_app)
