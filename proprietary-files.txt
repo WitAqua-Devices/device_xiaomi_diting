@@ -1124,6 +1124,65 @@ vendor/firmware/vpu20_4v.b19
 vendor/firmware/vpu20_4v.mbn
 vendor/firmware/vpu20_4v.mdt
 
+# FeliCa (Osaifu-Keitai)
+#
+# common.cfg carries the chip issuer id, the carrier id and the model string,
+# mfm.cfg a signed service descriptor - all three differ between the two
+# japanese handsets, so each set is kept under its own name and bound over
+# /vendor/etc/felica by init.felica_model.rc. The set left in place is the open
+# market one; that is only the bind target, and without a model chosen the NFC
+# routing below is not applied either, so nothing works until one is picked.
+#
+# The NFC configuration is part of the set. Stock japanese firmware routes
+# Type F to the element (DEFAULT_SYS_CODE_ROUTE and the other route ids are
+# 0x01 where the global one has 0x02 or 0x00) and the RF table is tuned per
+# handset. The RF file lands outside etc because that path is compiled into
+# the NXP HAL.
+#
+#   ./extract-files.py -n -s 'FeliCa (Osaifu-Keitai)' <FW/JAPAN/ext>
+vendor/etc/felica/common.cfg
+vendor/etc/felica/mfm.cfg
+vendor/etc/felica/mfs.cfg
+
+# FeliCa (22081212R)
+#   ./extract-files.py -n -s 'FeliCa (22081212R)' <FW/JAPAN/ext>
+vendor/etc/felica/common.cfg:vendor/etc/felica_22081212R/common.cfg
+vendor/etc/felica/mfm.cfg:vendor/etc/felica_22081212R/mfm.cfg
+vendor/etc/felica/mfs.cfg:vendor/etc/felica_22081212R/mfs.cfg
+vendor/etc/libnfc-nxp.conf:vendor/etc/nfc_22081212R/libnfc-nxp.conf
+vendor/etc/libnfc-nxp_RF.conf:vendor/etc/nfc_22081212R/libnfc-nxp_RF.conf
+
+# FeliCa (A201XM)
+#   ./extract-files.py -n -s 'FeliCa (A201XM)' <FW/SB/ext>
+vendor/etc/felica/common.cfg:vendor/etc/felica_A201XM/common.cfg
+vendor/etc/felica/mfm.cfg:vendor/etc/felica_A201XM/mfm.cfg
+vendor/etc/felica/mfs.cfg:vendor/etc/felica_A201XM/mfs.cfg
+vendor/etc/libnfc-nxp.conf:vendor/etc/nfc_A201XM/libnfc-nxp.conf
+vendor/etc/libnfc-nxp_RF.conf:vendor/etc/nfc_A201XM/libnfc-nxp_RF.conf
+
+# FeliCa applications
+#
+# From the SoftBank dump - the open market HyperOS build does not carry them at
+# all, and they are byte-identical to whatever it would have shipped: the model
+# specific part is the cfg above, not the apk.
+#
+# Everything here is signed with FeliCa Networks' key and has to stay that way.
+# The signature is what the element's access rules check, and Play only installs
+# an update over a package signed with the same key - which is also why the
+# version these carry (MobileFeliCaClient 31.3.2, an API 30 build) does not
+# matter much: the Play Store pulls all four forward on first use.
+#
+# Stock keeps them out of priv-app, so the deflated dex inside is allowed and
+# check_prebuilt_presigned_apk has nothing to complain about. Do not add
+# SKIPAPKCHECKS here - soong fails the build when that is set on an apk that
+# passes the checks anyway.
+#
+#   ./extract-files.py -n -s 'FeliCa applications' <FW/SB/ext>
+system/app/MobileFeliCaClient/MobileFeliCaClient.apk:product/app/MobileFeliCaClient/MobileFeliCaClient.apk;PRESIGNED|225eef6145df132db75fef5424c7e925e7bb5662
+system/app/MobileFeliCaMenuMainApp/MobileFeliCaMenuMainApp.apk:product/app/MobileFeliCaMenuMainApp/MobileFeliCaMenuMainApp.apk;PRESIGNED|a81ccdadc420c481f98a2b70f18cf4acc2a7ffa4
+system/app/MobileFeliCaSettingApp/MobileFeliCaSettingApp.apk:product/app/MobileFeliCaSettingApp/MobileFeliCaSettingApp.apk;PRESIGNED|7361d76ed59df330050018c9beb3e45d8c2de384
+system/app/MobileFeliCaWebPluginBoot/MobileFeliCaWebPluginBoot.apk:product/app/MobileFeliCaWebPluginBoot/MobileFeliCaWebPluginBoot.apk;PRESIGNED|bb4806b0843edfb1bfb7cef74587c1b8cd94bb97
+
 # MIUI Camera
 #
 # From the global OS3.0.6.0.VLFMIXM dump rather than either japanese one: the

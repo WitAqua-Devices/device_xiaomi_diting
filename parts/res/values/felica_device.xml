@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The WitAqua Project
+
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <!-- Where the sets live. -->
+    <string name="felica_config_dir" translatable="false">/vendor/etc</string>
+
+    <!-- The sets are named after the model number, which is what the back of
+         the handset and the settings "model" field say, but neither number
+         says on its own which one the handset is. Spell out the channel.
+         "<directory suffix>|<what to show>". -->
+    <string-array name="felica_model_labels" translatable="false">
+        <item>A201XM|A201XM (SoftBank)</item>
+        <item>22081212R|22081212R (SIM free)</item>
+    </string-array>
+</resources>

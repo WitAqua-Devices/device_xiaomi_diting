@@ -1,0 +1,54 @@
+#
+# Copyright (C) 2026 The WitAqua Project
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# The secure element only answers to the configuration it was formatted
+# against. diting ships as two japanese handsets - A201XM (SoftBank) and
+# 22081212R (open market) - and their sets differ in the chip issuer id, the
+# carrier id and the model string, so one cannot stand in for the other.
+#
+# Nothing tells the two apart. Both stock firmwares report the same
+# androidboot.hardware.sku (diting or ditingp, which is the CN/global panel
+# split) and the same fastboot product, and the model number lives only in
+# /odm/etc/<sku>_build.prop, which this ROM writes itself. docs/felica.md has
+# the comparison of the two dumps.
+#
+# What the bootloader does say is whether this is a japanese handset at all:
+# ro.boot.hwc is JP on one, where a chinese unit says CN and a global one GL
+# (measured on a 22081212R, hwc=JP hardware.sku=ditingp hwlevel=MP). So bind
+# the open market set on every japanese handset and leave FelicaParts to move
+# it, rather than making the common case wait for a choice.
+#
+# The NFC configuration moves with it. Type F only reaches the element when the
+# routing says so - stock japanese firmware sets DEFAULT_SYS_CODE_ROUTE and the
+# other route ids to 0x01 (eSE) where the global one leaves them on the UICC -
+# and the RF table is tuned per handset. A CN or global handset never enters
+# either block and keeps everything as it was extracted.
+on property:ro.boot.hwc=JP
+    mount none /vendor/etc/felica_22081212R /vendor/etc/felica bind
+    mount none /vendor/etc/nfc_22081212R/libnfc-nxp.conf /vendor/etc/libnfc-nxp.conf bind
+    mount none /vendor/etc/nfc_22081212R/libnfc-nxp_RF.conf /vendor/libnfc-nxp_RF.conf bind
+
+# Whatever FelicaParts was told to use, bound on top of the above - for a
+# handset whose element was provisioned as the other model. This is the only
+# way to reach the A201XM set, and it has to stay: the two cannot be told apart
+# from the outside, so the one case the default gets wrong needs a way out.
+#
+# Lives on system_ext because the property has to be writable by the settings
+# app: /vendor and /odm scripts expand ${} through vendor_init, which cannot
+# read a system property, and a vendor property cannot be set from an app at
+# all. init parses this one itself, so it can read either.
+#
+# Fires when the persistent properties are loaded, which is after the block
+# above - ro.boot.hwc is there from the first property load. The NFC HAL starts
+# before both on early_hal, but only reads its configuration when the framework
+# first opens it, which is far later. A bind mount is invisible to a file
+# descriptor somebody already holds, which is the other half of why the settings
+# screen asks for a reboot. A value with no directory of its own leaves the
+# japanese default in place; init ignores ENOENT.
+on property:persist.felica.model=*
+    mount none /vendor/etc/felica_${persist.felica.model} /vendor/etc/felica bind
+    mount none /vendor/etc/nfc_${persist.felica.model}/libnfc-nxp.conf /vendor/etc/libnfc-nxp.conf bind
+    mount none /vendor/etc/nfc_${persist.felica.model}/libnfc-nxp_RF.conf /vendor/libnfc-nxp_RF.conf bind

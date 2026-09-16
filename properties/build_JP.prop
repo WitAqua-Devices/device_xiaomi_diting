@@ -1,0 +1,18 @@
+# Japanese model
+#
+# ro.boot.hwc is JP on a japanese handset, and odm.prop imports by it, so
+# without this file the import is a no-op and the handset keeps whatever the
+# build generated - which is the global model number. Measured on a 22081212R:
+# hwc=JP hardware.sku=ditingp hwlevel=MP hwversion=13.39.0.
+#
+# The two japanese handsets cannot be told apart from the outside, so this
+# names the open market one; the SoftBank A201XM differs only in its FeliCa
+# configuration, which FelicaParts can still move (init.felica_model.rc).
+bluetooth.device.default_name=Xiaomi 12T Pro
+vendor.usb.product_string=Xiaomi 12T Pro
+ro.product.odm.brand=Xiaomi
+ro.product.odm.device=diting
+ro.product.odm.manufacturer=Xiaomi
+ro.product.odm.model=22081212R
+ro.product.odm.name=ditingp_jp
+ro.product.mod_device=ditingp_jp

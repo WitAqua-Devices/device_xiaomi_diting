@@ -1,0 +1,8 @@
+# init.felica_model.rc binds the FeliCa set and the NFC configuration belonging
+# to the selected handset over the canonical paths. The FeliCa sets are
+# directories under /vendor/etc, libnfc-nxp.conf is a file there, and the RF
+# table sits at /vendor/libnfc-nxp_RF.conf because that path is compiled into
+# the NXP HAL.
+allow init vendor_configs_file:dir mounton;
+allow init vendor_configs_file:file mounton;
+allow init vendor_file:file mounton;
