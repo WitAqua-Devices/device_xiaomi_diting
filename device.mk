@@ -17,6 +17,38 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/resourcemanager_waipio_mtp.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_cape/resourcemanager_waipio_mtp.xml \
     $(LOCAL_PATH)/audio/usecaseKvManager.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usecaseKvManager.xml
 
+# eUICC
+#
+# Three pieces with separate jobs.
+#
+# XiaomiEsimSwitcher (hardware/xiaomi) is the switch itself. The eUICC shares a
+# slot with the removable SIM, and AOSP has no way to move it: qcril exposes
+# vendor.qti.hardware.radio.lpa but the slot itself is turned over by Xiaomi's
+# own RIL hook, which is why this reaches for mirilhook.jar. It shows up under
+# network settings, and enables itself off non_removable_euicc_slots below -
+# so the overlay is what decides whether any of this appears.
+#
+# EuiccPolicy is lineage's own and does something else: it enables or disables
+# the google LPA depending on FEATURE_TELEPHONY_EUICC and whether GMS is there.
+# EuiccPolicyResDiting hands the LPA the slot layout through the partner
+# customization broadcast. Neither touches the hook, and the switcher does not
+# touch the LPA, so all three coexist.
+#
+# The feature goes in the sku directory rather than being declared outright, so
+# the chinese handset - hardware.sku diting, where ditingp is global and
+# japanese - does not advertise an eUICC it has no LPA for. It is the closest
+# diting gets to garnet's per region gating: ro.boot.product.hardware.sku is
+# ditingp on both GL and JP units, so the feature cannot be narrowed to JP the
+# way the overlays can.
+PRODUCT_PACKAGES += \
+    EuiccPolicy \
+    EuiccPolicyResDiting \
+    FrameworksResDitingEsim \
+    XiaomiEsimSwitcher
+
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.telephony.euicc.xml:$(TARGET_COPY_OUT_ODM)/etc/permissions/sku_ditingp/android.hardware.telephony.euicc.xml
+
 # MIUI Camera
 #
 # The apk and the xiaomi jni libraries come from vendor/xiaomi/diting; the apk

@@ -1,0 +1,18 @@
+<!--
+     Copyright (C) 2026 The WitAqua Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<!--
+     Only the japanese handset has a provisioned eUICC. garnet gates the same
+     overlay on ro.boot.product.hardware.sku, which is the region there (CN, GL,
+     IN, JP); on diting that property is the panel variant (ditingp) and
+     ro.boot.hwc carries the region instead - measured JP on a 22081212R.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="android.overlay.diting.esim">
+    <overlay android:targetPackage="android"
+                   android:isStatic="true"
+                   android:priority="1000"
+                   android:requiredSystemPropertyName="ro.boot.hwc"
+                   android:requiredSystemPropertyValue="JP"/>
+</manifest>

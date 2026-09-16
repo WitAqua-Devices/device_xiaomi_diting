@@ -1,0 +1,13 @@
+//
+// Copyright (C) 2026 The WitAqua Project
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+runtime_resource_overlay {
+    name: "EuiccPolicyResDiting",
+    // EuiccPolicy declares no <overlayable>, so this has to be a same
+    // signature overlay to be allowed to target it.
+    certificate: "platform",
+    device_specific: true,
+}

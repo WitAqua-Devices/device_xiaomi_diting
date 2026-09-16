@@ -1,0 +1,10 @@
+//
+// Copyright (C) 2026 The WitAqua Project
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+runtime_resource_overlay {
+    name: "FrameworksResDitingEsim",
+    device_specific: true,
+}

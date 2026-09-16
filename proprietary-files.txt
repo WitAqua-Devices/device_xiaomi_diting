@@ -1208,3 +1208,36 @@ system_ext/lib64/libcamera_algoup_jni.xiaomi.so:system/lib64/libcamera_algoup_jn
 system_ext/lib64/libcamera_mianode_jni.xiaomi.so:system/lib64/libcamera_mianode_jni.xiaomi.so
 system_ext/lib64/libmicampostproc_client.so:system/lib64/libmicampostproc_client.so
 system_ext/lib64/vendor.xiaomi.hardware.campostproc@1.0.so:system/lib64/vendor.xiaomi.hardware.campostproc@1.0.so;MODULE_SUFFIX=_system
+
+# Euicc
+#
+# From garnet, which took it from a OnePlus 11 (CPH2449_14.0.0.401(EX01)).
+# com.google.android.euicc is the LPA itself. Taking it standalone rather than
+# with GApps is what garnet does, and it is why XiaomiEuicc has something to
+# talk to on a build with no GMS: EuiccDisabler only leaves the LPA enabled when
+# its dependencies are there, and the profile download UI is this apk.
+#
+# PRESIGNED, pinned to the hashes garnet pins - a repack would lose the google
+# signature the euicc framework checks before binding EuiccService.
+#
+#   ./extract-files.py -n -s 'Euicc' <dump with product/priv-app/EuiccGoogle>
+product/priv-app/EuiccGoogle/EuiccGoogle.apk;PRESIGNED|4fb8d8ab0e1dbda1582361f48395f819367edb0a
+product/etc/permissions/privapp-permissions-euiccgoogle.xml|58ddaa5bbff62eefd2d5c39900b7b29fd177def1
+
+# eSIM (Xiaomi RIL hook)
+#
+# XiaomiEsimSwitcher (hardware/xiaomi) reaches the modem through Xiaomi's own
+# RIL hook rather than AOSP's slot mapping: onSetEsimStatus between a pair of
+# onHookUimPowerReqEx calls is what moves the shared slot between the eUICC and
+# the removable SIM. qcrilhook.jar is already extracted by sm8450-common; this
+# is the other half.
+#
+# Only the global dump has it - neither japanese firmware ships the hook, the
+# same way only the SoftBank one ships an LPA.
+#
+# No patching needed. MiRilHook checks the calling package against its own
+# allowlist, which holds com.xiaomi.mtb, and that is what the upstream app is
+# called. Forks that rename it to com.xiaomi.settings have to patch the jar.
+#
+#   ./extract-files.py -n -s 'eSIM (Xiaomi RIL hook)' <FW/GL>
+system_ext/framework/mirilhook.jar

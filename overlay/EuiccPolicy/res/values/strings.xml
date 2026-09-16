@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The WitAqua Project
+
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <!--
+        EuiccPolicy hands this to com.google.android.euicc through the
+        PARTNER_CUSTOMIZATION broadcast: it is how the LPA learns which slot is
+        the built-in eUICC and which is the removable one, and therefore how
+        SIM 2 gets offered as either. "devices" is matched against
+        ro.product.device.
+
+        Slot 1 is the eUICC, same as garnet - non_removable_euicc_slots in the
+        Esim framework overlay says the same thing to the platform.
+    -->
+    <string name="sim_slot_mappings_json" translatable="false">{\"sim-slot-mappings\":[{\"devices\":[\"diting\"],\"esim-slot-ids\":[1],\"psim-slot-ids\":[0]}]}</string>
+</resources>

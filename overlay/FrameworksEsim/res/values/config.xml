@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The WitAqua Project
+
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <!-- Device-specific array of SIM slot indexes which are embedded eUICCs.
+         The second slot is the built-in one; config_num_physical_slots stays at
+         the 2 that sm8450-common already sets. -->
+    <integer-array name="non_removable_euicc_slots">
+        <item>1</item>
+    </integer-array>
+
+    <!-- Capabilities the eUICC reports to the carrier during profile download. -->
+    <string-array name="config_telephonyEuiccDeviceCapabilities">
+        <item>gsm,8</item>
+        <item>utran,9</item>
+        <item>eutran,15</item>
+    </string-array>
+</resources>
