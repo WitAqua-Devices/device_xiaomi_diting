@@ -1,0 +1,64 @@
+Subject: [PATCH] Always offer the shutter sound setting
+
+MiuiCamera hides the camera sound entry, and forces the sound on regardless
+of the stored preference, whenever it decides the handset is in a country
+that requires it. The list is KR and JP, matched against the country code,
+so a japanese handset never gets the setting at all.
+
+The decision is one method. CameraPreferenceFragment skips adding
+pref_camerasound_key when it returns true, v2.m3() ORs it over the stored
+preference, and b4 - the thing that actually plays the sound - keeps it as
+its "forced" flag. Returning false from it therefore does both halves at
+once: the entry appears, and the switch it exposes is the one that decides.
+
+Shutter sound in Japan is an industry practice rather than a legal
+requirement, and this ROM leaves the choice where every other AOSP camera
+leaves it - with whoever is holding the phone.
+
+diff --git a/smali_classes3/mb/b.smali b/smali_classes3/mb/b.smali
+index 901bdb3..b991797 100644
+--- a/smali_classes3/mb/b.smali
++++ b/smali_classes3/mb/b.smali
+@@ -2830,40 +2830,9 @@
+ .method public J2()Z
+     .locals 1
+ 
+-    invoke-static {}, Lmb/c;->e()Z
+-
+-    move-result v0
+-
+-    if-nez v0, :cond_1
+-
+-    invoke-static {}, Lmb/b;->q2()Lmb/b;
+-
+-    move-result-object v0
+-
+-    invoke-virtual {v0}, Lmb/b;->D2()Z
+-
+-    move-result v0
+-
+-    if-eqz v0, :cond_0
+-
+-    goto :goto_0
+-
+-    :cond_0
+-    const/4 p0, 0x0
+-
+-    return p0
+-
+-    :cond_1
+-    :goto_0
+-    invoke-virtual {p0}, Lmb/b;->f0()Ljava/lang/String;
+-
+-    move-result-object v0
+-
+-    invoke-virtual {p0, v0}, Lmb/b;->J4(Ljava/lang/String;)Z
+-
+-    move-result p0
++    const/4 v0, 0x0
+ 
+-    return p0
++    return v0
+ .end method
+ 
+ .method public J3()Z
