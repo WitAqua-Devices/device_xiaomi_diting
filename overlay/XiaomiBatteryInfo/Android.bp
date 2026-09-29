@@ -1,0 +1,9 @@
+//
+// SPDX-FileCopyrightText: 2026 WitAqua
+// SPDX-License-Identifier: Apache-2.0
+//
+
+runtime_resource_overlay {
+    name: "XiaomiBatteryInfoResDiting",
+    device_specific: true,
+}

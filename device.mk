@@ -103,6 +103,11 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/miuicamera-hiddenapi-package-allowlist.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/miuicamera-hiddenapi-package-allowlist.xml \
     $(LOCAL_PATH)/configs/public.libraries-xiaomi.txt:$(TARGET_COPY_OUT_SYSTEM)/etc/public.libraries-xiaomi.txt
 
+# Battery
+PRODUCT_PACKAGES += \
+    XiaomiBattery \
+    XiaomiBatteryInfo
+
 # Overlay
 PRODUCT_PACKAGES += \
     ApertureResDiting \
@@ -113,7 +118,8 @@ PRODUCT_PACKAGES += \
     SettingsResDiting \
     SystemUIResDiting \
     WifiResDiting \
-    WifiResDitingCN
+    WifiResDitingCN \
+    XiaomiBatteryInfoResDiting
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \

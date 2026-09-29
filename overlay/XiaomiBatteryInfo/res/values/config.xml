@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: 2026 WitAqua
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <!--
+        The charger firmware runs on the ADSP, and what it knows beyond the
+        standard supply properties is published on the qcom-battery class.
+    -->
+    <string-array name="config_battery_serial_nodes" translatable="false">
+        <item>battery/serial_number</item>
+        <item>/sys/class/qcom-battery/batt_sn</item>
+    </string-array>
+    <string-array name="config_battery_soh_nodes" translatable="false">
+        <item>battery/state_of_health</item>
+        <item>/sys/class/qcom-battery/fg1_soh</item>
+    </string-array>
+    <string-array name="config_adapter_watts_nodes" translatable="false">
+        <item>/sys/class/qcom-battery/apdo_max</item>
+    </string-array>
+    <!-- The usb supply has no input_current_now; current_now is the input. -->
+    <string-array name="config_usb_current_nodes" translatable="false">
+        <item>usb/current_now</item>
+    </string-array>
+</resources>

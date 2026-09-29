@@ -1,0 +1,4 @@
+# The supplies and the qcom-battery class the Xiaomi values sit in carry the
+# qualcomm vendor_ labels.
+r_dir_file(vendor_xiaomi_battery_app, vendor_sysfs_battery_supply)
+r_dir_file(vendor_xiaomi_battery_app, vendor_sysfs_usb_supply)

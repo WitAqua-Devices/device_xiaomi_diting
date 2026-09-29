@@ -26,6 +26,7 @@ TARGET_VENDOR_PROP += $(DEVICE_PATH)/properties/vendor.prop
 # SELinux
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
+BOARD_VENDOR_SEPOLICY_DIRS += hardware/xiaomi/packages/XiaomiBatteryInfo/sepolicy/vendor
 
 # Screen density
 TARGET_SCREEN_DENSITY := 480
